@@ -20,6 +20,9 @@
 package com.niesens.morsetrainer;
 
 import android.os.AsyncTask;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.List;
 import java.util.Random;
@@ -27,10 +30,12 @@ import java.util.Random;
 public class Trainer extends AsyncTask<Void, Void, Void> {
     private final MorsePlayer morsePlayer;
     private final TextSpeaker textSpeaker;
-    private final List<Word> wordList;
+    private List<Word> wordList;
     private int wordTrainTimes;
     private boolean speakFirst;
     private boolean randomOrder;
+    private List<Word> staticWordList;
+
     private final Random random = new Random();
 
     Trainer(MorsePlayer morsePlayer, TextSpeaker textSpeaker, List<Word> wordList, int wordTrainTimes, boolean speakFirst, boolean randomOrder) {
@@ -40,6 +45,7 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
         this.wordTrainTimes = wordTrainTimes;
         this.speakFirst = speakFirst;
         this.randomOrder = randomOrder;
+        this.staticWordList = wordList;
     }
 
     public void setWordTrainTimes(int wordTrainTimes) {
@@ -54,6 +60,7 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
         this.randomOrder = randomOrder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected Void doInBackground(Void... params) {
 
@@ -61,7 +68,14 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
             Word word = null;
             int wordTrainedCount = 0;
             int wordNumber = 0;
+            int wordListSize = wordList.size();
             while (!isCancelled()) {
+                if(wordTrainedCount == wordListSize){
+                    wordList = staticWordList;
+                    word = null;
+                    wordTrainedCount = 0;
+                    wordNumber = 0;
+                }
                 if (word == null || wordTrainedCount >= wordTrainTimes) {
                     if (randomOrder) {
                         if (wordTrainedCount > 0){
@@ -71,6 +85,10 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
                         wordNumber = random.nextInt(wordList.size());
                     }
                     word = wordList.get(wordNumber);
+                    wordList.remove(word);
+                    wordNumber--;
+                    System.out.println(wordNumber);
+                    System.out.println(word.getSpeakText());
                     wordTrainedCount = 0;
                 }
                 boolean speakAfter = true;
