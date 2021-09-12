@@ -38,22 +38,23 @@
         android:id="@+id/startStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
         android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
         android:enabled="false"
         android:text="@string/trainingStartText" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/wordTrainTimes"
             android:layout_toLeftOf="@+id/wordTrainTimes"
-            android:layout_centerVertical="true"
             android:text="@string/repeat"
             android:textSize="20sp" />
 
@@ -64,12 +65,13 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/wordTrainTimes"
             android:layout_toRightOf="@+id/wordTrainTimes"
-            android:layout_centerVertical="true"
             android:text="@string/times"
             android:textSize="20sp" />
     </RelativeLayout>
@@ -87,6 +89,7 @@
             android:layout_toLeftOf="@+id/speakFirst"
             android:text="@string/audio_hint"
             android:textSize="20sp" />
+
         <ToggleButton
             android:id="@+id/speakFirst"
             android:layout_width="wrap_content"
@@ -102,6 +105,31 @@
             android:layout_centerVertical="true"
             android:text="@string/morse_code"
             android:textSize="20sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/randomOrder"
+            android:text="@string/word_list"
+            android:textSize="20sp" />
+
+        <ToggleButton
+            android:id="@+id/randomOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textOff="@string/random"
+            android:textOn="@string/in_order" />
+
     </RelativeLayout>
 
 </LinearLayout>

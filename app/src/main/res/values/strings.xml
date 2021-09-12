@@ -98,5 +98,8 @@
     <string name="pref_description_ui_reset">Reset ui preferences to default values.</string>
     <string name="seekbar_filler_value">000</string>
     <string name="measurement_unit_value">wpm</string>
+    <string name="in_order">in order</string>
+    <string name="random">random</string>
+    <string name="word_list">Word list</string>
 
 </resources>

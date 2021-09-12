@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     Button button_trainingFile;
     NumberPicker numberPicker_wordTrainTimes;
     ToggleButton toggleButton_speakFirst;
+    ToggleButton toggleButton_randomOrder;
     private MorsePlayer morsePlayer;
     private TextSpeaker textSpeaker;
     private List<Word> wordList;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if ("Yes".equals(getUiNightModePreference(sharedPreferences))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -138,6 +140,15 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 sharedPreferences.edit().putBoolean("speak_first", isChecked).apply();
             }
         });
+
+        toggleButton_randomOrder = findViewById(R.id.randomOrder);
+        toggleButton_randomOrder.setChecked(getRandomOrderPreference(sharedPreferences));
+        toggleButton_randomOrder.setOnCheckedChangeListener(new ToggleButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedPreferences.edit().putBoolean("random_order", isChecked).apply();
+            }
+        });
    }
 
     private void startTrainer() {
@@ -146,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
         button_startStop.setText(R.string.trainingStopText);
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        trainer = new Trainer(morsePlayer, textSpeaker, wordList, getWordTrainTimesPreference(sharedPreferences), toggleButton_speakFirst.isChecked());
+        trainer = new Trainer(morsePlayer, textSpeaker, wordList, getWordTrainTimesPreference(sharedPreferences), toggleButton_speakFirst.isChecked(), toggleButton_randomOrder.isChecked());
         trainer.execute();
     }
 
@@ -357,8 +368,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     textSpeaker.setAfterSpeakDelay(getDelayAfterAnswerPreference(sharedPreferences));
                 }
                 break;
+            case "random_order":
+                if (trainer != null) {
+                    trainer.setRandomOrder(getRandomOrderPreference(sharedPreferences));
+                }
+                break;
         }
-
     }
 
     private int getMorseWpmPreference(SharedPreferences sharedPreferences) {
@@ -408,5 +423,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private boolean getSpeakFirstPreference(SharedPreferences sharedPreferences) {
         return sharedPreferences.getBoolean("speak_first", false);
+    }
+
+    private boolean getRandomOrderPreference(SharedPreferences sharedPreferences) {
+        return sharedPreferences.getBoolean("random_order", false);
     }
 }

@@ -30,14 +30,16 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
     private final List<Word> wordList;
     private int wordTrainTimes;
     private boolean speakFirst;
+    private boolean randomOrder;
     private final Random random = new Random();
 
-    Trainer(MorsePlayer morsePlayer, TextSpeaker textSpeaker, List<Word> wordList, int wordTrainTimes, boolean speakFirst) {
+    Trainer(MorsePlayer morsePlayer, TextSpeaker textSpeaker, List<Word> wordList, int wordTrainTimes, boolean speakFirst, boolean randomOrder) {
         this.morsePlayer = morsePlayer;
         this.textSpeaker = textSpeaker;
         this.wordList = wordList;
         this.wordTrainTimes = wordTrainTimes;
         this.speakFirst = speakFirst;
+        this.randomOrder = randomOrder;
     }
 
     public void setWordTrainTimes(int wordTrainTimes) {
@@ -48,15 +50,26 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
         this.speakFirst = speakFirst;
     }
 
+    public void setRandomOrder(boolean randomOrder) {
+        this.randomOrder = randomOrder;
+    }
+
     @Override
     protected Void doInBackground(Void... params) {
 
         synchronized (this) {
             Word word = null;
             int wordTrainedCount = 0;
-            while(!isCancelled()) {
+            int wordNumber = 0;
+            while (!isCancelled()) {
                 if (word == null || wordTrainedCount >= wordTrainTimes) {
-                    int wordNumber = random.nextInt(wordList.size());
+                    if (randomOrder) {
+                        if (wordTrainedCount > 0){
+                            wordNumber++;
+                        }
+                    } else {
+                        wordNumber = random.nextInt(wordList.size());
+                    }
                     word = wordList.get(wordNumber);
                     wordTrainedCount = 0;
                 }
