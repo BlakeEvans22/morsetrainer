@@ -31,25 +31,25 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
     private final MorsePlayer morsePlayer;
     private final TextSpeaker textSpeaker;
     private List<Word> wordList;
-    private int wordTrainTimes;
+    private int wordRepeatTimes;
     private boolean speakFirst;
     private boolean randomOrder;
     private List<Word> staticWordList;
 
     private final Random random = new Random();
 
-    Trainer(MorsePlayer morsePlayer, TextSpeaker textSpeaker, List<Word> wordList, int wordTrainTimes, boolean speakFirst, boolean randomOrder) {
+    Trainer(MorsePlayer morsePlayer, TextSpeaker textSpeaker, List<Word> wordList, int wordRepeatTimes, boolean speakFirst, boolean randomOrder) {
         this.morsePlayer = morsePlayer;
         this.textSpeaker = textSpeaker;
         this.wordList = wordList;
-        this.wordTrainTimes = wordTrainTimes;
+        this.wordRepeatTimes = wordRepeatTimes;
         this.speakFirst = speakFirst;
         this.randomOrder = randomOrder;
         this.staticWordList = wordList;
     }
 
-    public void setWordTrainTimes(int wordTrainTimes) {
-        this.wordTrainTimes = wordTrainTimes;
+    public void setWordTrainTimes(int wordRepeatTimes) {
+        this.wordRepeatTimes = wordRepeatTimes;
     }
 
     public void setSpeakFirst(boolean speakFirst) {
@@ -68,27 +68,16 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
             Word word = null;
             int wordTrainedCount = 0;
             int wordNumber = 0;
-            int wordListSize = wordList.size();
             while (!isCancelled()) {
-                if(wordTrainedCount == wordListSize){
-                    wordList = staticWordList;
-                    word = null;
-                    wordTrainedCount = 0;
-                    wordNumber = 0;
-                }
-                if (word == null || wordTrainedCount >= wordTrainTimes) {
+                if (word == null || wordTrainedCount >= wordRepeatTimes) {
                     if (randomOrder) {
+                        wordNumber = random.nextInt(wordList.size());
+                    } else {
                         if (wordTrainedCount > 0){
                             wordNumber++;
                         }
-                    } else {
-                        wordNumber = random.nextInt(wordList.size());
                     }
                     word = wordList.get(wordNumber);
-                    wordList.remove(word);
-                    wordNumber--;
-                    System.out.println(wordNumber);
-                    System.out.println(word.getSpeakText());
                     wordTrainedCount = 0;
                 }
                 boolean speakAfter = true;
