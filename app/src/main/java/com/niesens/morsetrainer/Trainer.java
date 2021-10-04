@@ -24,6 +24,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -34,8 +35,7 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
     private int wordRepeatTimes;
     private boolean speakFirst;
     private boolean randomOrder;
-    private List<Word> staticWordList;
-
+    private List<Word> deletedWordList;
     private final Random random = new Random();
 
     Trainer(MorsePlayer morsePlayer, TextSpeaker textSpeaker, List<Word> wordList, int wordRepeatTimes, boolean speakFirst, boolean randomOrder) {
@@ -45,7 +45,6 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
         this.wordRepeatTimes = wordRepeatTimes;
         this.speakFirst = speakFirst;
         this.randomOrder = randomOrder;
-        this.staticWordList = wordList;
     }
 
     public void setWordTrainTimes(int wordRepeatTimes) {
@@ -68,17 +67,31 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
             Word word = null;
             int wordTrainedCount = 0;
             int wordNumber = 0;
+            deletedWordList = new ArrayList<>();
             while (!isCancelled()) {
+                if (wordList.size() == 0) {
+                    //wordList = deletedWordList;
+                    for (Word deletedWord: deletedWordList){
+                        wordList.add(deletedWord);
+                    };
+
+                    deletedWordList.clear();
+                    word = null;
+                    wordTrainedCount = 0;
+                    wordNumber = 0;
+                }
                 if (word == null || wordTrainedCount >= wordRepeatTimes) {
                     if (randomOrder) {
                         wordNumber = random.nextInt(wordList.size());
                     } else {
-                        if (wordTrainedCount > 0){
+                        if (wordTrainedCount > 0) {
                             wordNumber++;
                         }
                     }
                     word = wordList.get(wordNumber);
-                    wordTrainedCount = 0;
+                    //wordTrainedCount = 0;
+                    deletedWordList.add(word);
+                    wordList.remove(wordNumber);
                 }
                 boolean speakAfter = true;
                 if (speakFirst) {
