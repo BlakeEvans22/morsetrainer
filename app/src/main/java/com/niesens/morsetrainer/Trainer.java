@@ -83,13 +83,9 @@ public class Trainer extends AsyncTask<Void, Void, Void> {
                 if (word == null || wordTrainedCount >= wordRepeatTimes) {
                     if (randomOrder) {
                         wordNumber = random.nextInt(wordList.size());
-                    } else {
-                        if (wordTrainedCount > 0) {
-                            wordNumber++;
-                        }
                     }
                     word = wordList.get(wordNumber);
-                    //wordTrainedCount = 0;
+                    wordTrainedCount = 0;
                     deletedWordList.add(word);
                     wordList.remove(wordNumber);
                 }
